@@ -5,8 +5,8 @@ import {
     ListItemText, Toolbar, Typography, InputBase, alpha, styled,
 } from '@mui/material';
 import {
-    Menu as MenuIcon, Dashboard, Build, StickyNote2, NotificationsActive,
-    Search as SearchIcon, ViewKanban,
+    Menu as MenuIcon, Build, NotificationsActive, ViewQuilt,
+    Search as SearchIcon,
 } from '@mui/icons-material';
 
 const DRAWER_WIDTH = 260;
@@ -29,11 +29,10 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const menuItems = [
-    { text: 'Painel', icon: <Dashboard />, path: '/' },
-    { text: 'Tarefas', icon: <ViewKanban />, path: '/Tarefas' },
-    { text: 'Ferramentas', icon: <Build />, path: '/tools' },
-    { text: 'Anotações', icon: <StickyNote2 />, path: '/annotations' },
-    { text: 'Lembretes', icon: <NotificationsActive />, path: '/reminders' },
+    // { text: 'Painel', icon: <Dashboard />, path: '/' },
+    { text: 'Ferramentas', icon: <Build />, path: '/ferramentas' },
+    { text: 'Lembretes', icon: <NotificationsActive />, path: '/lembretes' },
+    { text: 'Editor de Banner', icon: <ViewQuilt />, path: '/banner-editor' },
 ];
 
 export default function Layout() {
@@ -50,7 +49,7 @@ export default function Layout() {
                         <MenuIcon />
                     </IconButton>
                     <Typography variant="h6" noWrap sx={{ background: 'linear-gradient(90deg, #6C63FF, #00BFA6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                        DevPortal
+                        PortalDev
                     </Typography>
                     <SearchBox>
                         <SearchIconWrapper><SearchIcon /></SearchIconWrapper>

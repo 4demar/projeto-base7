@@ -2,11 +2,9 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ThemeProvider, CssBaseline } from '@mui/material';
 import { theme } from './theme';
 import Layout from './components/Layout';
-import DashboardPage from './pages/DashboardPage';
-import ToolsPage from './pages/ToolsPage';
-import AnnotationsPage from './pages/AnnotationsPage';
-import RemindersPage from './pages/RemindersPage';
-import TarefasPage from './pages/TarefasPage';
+import RemindersPage from './pages/LembreteTodo';
+import Ferramentas from './pages/Ferramentas';
+import BannerEditor from './pages/BannerEditor';
 
 export default function App() {
   return (
@@ -14,12 +12,10 @@ export default function App() {
       <CssBaseline />
       <BrowserRouter>
         <Routes>
-          <Route element={<Layout />}>
-            <Route path="/" element={<DashboardPage />} />
-            <Route path="/tools" element={<ToolsPage />} />
-            <Route path="/annotations" element={<AnnotationsPage />} />
-            <Route path="/reminders" element={<RemindersPage />} />
-            <Route path="/Tarefas" element={<TarefasPage />} />
+          <Route path="/" element={<Layout />}>
+            <Route path="/ferramentas" element={<Ferramentas />} />
+            <Route path="/lembretes" element={<RemindersPage />} />
+            <Route path="/banner-editor" element={<BannerEditor />} />
           </Route>
         </Routes>
       </BrowserRouter>

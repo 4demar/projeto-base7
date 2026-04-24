@@ -1,8 +1,7 @@
 import { useState, useCallback } from 'react';
-import { Annotation, Reminder } from '../types';
+import { LembreteDto, BannerProject } from '../types';
 
-const ANNOTATIONS_KEY = 'devportal_annotations';
-const REMINDERS_KEY = 'devportal_reminders';
+const LEMBRETE_KEY = 'devportal_lembrete';
 
 function loadFromStorage<T>(key: string, fallback: T[]): T[] {
     try {
@@ -15,131 +14,91 @@ function saveToStorage<T>(key: string, data: T[]) {
     localStorage.setItem(key, JSON.stringify(data));
 }
 
-export function useAnnotations() {
-    const [annotations, setAnnotations] = useState<Annotation[]>(() => loadFromStorage(ANNOTATIONS_KEY, []));
+export function useLembrete() {
+    const [lembrete, setLembrete] = useState<LembreteDto[]>(() => loadFromStorage(LEMBRETE_KEY, []));
 
-    const addAnnotation = useCallback((annotation: Omit<Annotation, 'id' | 'createdAt' | 'updatedAt'>) => {
-        const newAnnotation: Annotation = {
-            ...annotation,
-            id: crypto.randomUUID(),
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-        };
-        setAnnotations(prev => {
-            const updated = [newAnnotation, ...prev];
-            saveToStorage(ANNOTATIONS_KEY, updated);
-            return updated;
-        });
-        return newAnnotation;
-    }, []);
-
-    const updateAnnotation = useCallback((id: string, data: Partial<Annotation>) => {
-        setAnnotations(prev => {
-            const updated = prev.map(a => a.id === id ? { ...a, ...data, updatedAt: new Date().toISOString() } : a);
-            saveToStorage(ANNOTATIONS_KEY, updated);
-            return updated;
-        });
-    }, []);
-
-    const deleteAnnotation = useCallback((id: string) => {
-        setAnnotations(prev => {
-            const updated = prev.filter(a => a.id !== id);
-            saveToStorage(ANNOTATIONS_KEY, updated);
-            return updated;
-        });
-    }, []);
-
-    return { annotations, addAnnotation, updateAnnotation, deleteAnnotation };
-}
-
-export function useReminders() {
-    const [reminders, setReminders] = useState<Reminder[]>(() => loadFromStorage(REMINDERS_KEY, []));
-
-    const addReminder = useCallback((reminder: Omit<Reminder, 'id' | 'createdAt'>) => {
-        const newReminder: Reminder = {
-            ...reminder,
+    const addLembrete = useCallback((Lembrete: Omit<LembreteDto, 'id' | 'createdAt'>) => {
+        const newLembrete: LembreteDto = {
+            ...Lembrete,
             id: crypto.randomUUID(),
             createdAt: new Date().toISOString(),
         };
-        setReminders(prev => {
-            const updated = [newReminder, ...prev];
-            saveToStorage(REMINDERS_KEY, updated);
+        setLembrete(prev => {
+            const updated = [newLembrete, ...prev];
+            saveToStorage(LEMBRETE_KEY, updated);
             return updated;
         });
-        return newReminder;
+        return newLembrete;
     }, []);
 
-    const toggleReminder = useCallback((id: string) => {
-        setReminders(prev => {
+    const toggleLembrete = useCallback((id: string) => {
+        setLembrete(prev => {
             const updated = prev.map(r => r.id === id ? { ...r, completed: !r.completed } : r);
-            saveToStorage(REMINDERS_KEY, updated);
+            saveToStorage(LEMBRETE_KEY, updated);
             return updated;
         });
     }, []);
 
-    const deleteReminder = useCallback((id: string) => {
-        setReminders(prev => {
+    const deleteLembrete = useCallback((id: string) => {
+        setLembrete(prev => {
             const updated = prev.filter(r => r.id !== id);
-            saveToStorage(REMINDERS_KEY, updated);
+            saveToStorage(LEMBRETE_KEY, updated);
             return updated;
         });
     }, []);
 
-    return { reminders, addReminder, toggleReminder, deleteReminder };
+    return { lembrete, addLembrete, toggleLembrete, deleteLembrete };
 }
 
-import { TarefasTask, TarefasColumn } from '../types';
 
-const Tarefas_KEY = 'devportal_Tarefas';
+const BANNER_PROJECTS_KEY = 'devportal_banner_projects';
 
-export function useTarefas() {
-    const [tasks, setTasks] = useState<TarefasTask[]>(() => loadFromStorage(Tarefas_KEY, []));
+export function useBannerEditor(): {
+    projects: BannerProject[];
+    saveProject: (project: Omit<BannerProject, 'id' | 'createdAt' | 'updatedAt'>) => BannerProject;
+    updateProject: (project: BannerProject) => void;
+    loadProject: (id: string) => BannerProject | undefined;
+    deleteProject: (id: string) => void;
+} {
+    const [projects, setProjects] = useState<BannerProject[]>(() =>
+        loadFromStorage<BannerProject>(BANNER_PROJECTS_KEY, [])
+    );
 
-    const addTask = useCallback((task: Omit<TarefasTask, 'id' | 'createdAt' | 'updatedAt' | 'order'>) => {
-        const colTasks = tasks.filter(t => t.column === task.column);
-        const newTask: TarefasTask = {
-            ...task,
+    const saveProject = useCallback((project: Omit<BannerProject, 'id' | 'createdAt' | 'updatedAt'>): BannerProject => {
+        const now = new Date().toISOString();
+        const newProject: BannerProject = {
+            ...project,
             id: crypto.randomUUID(),
-            order: colTasks.length,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
+            createdAt: now,
+            updatedAt: now,
         };
-        setTasks(prev => {
-            const updated = [...prev, newTask];
-            saveToStorage(Tarefas_KEY, updated);
+        setProjects(prev => {
+            const updated = [newProject, ...prev];
+            saveToStorage(BANNER_PROJECTS_KEY, updated);
             return updated;
         });
-        return newTask;
-    }, [tasks]);
+        return newProject;
+    }, []);
 
-    const updateTask = useCallback((id: string, data: Partial<TarefasTask>) => {
-        setTasks(prev => {
-            const updated = prev.map(t => t.id === id ? { ...t, ...data, updatedAt: new Date().toISOString() } : t);
-            saveToStorage(Tarefas_KEY, updated);
+    const updateProject = useCallback((project: BannerProject): void => {
+        setProjects(prev => {
+            const updated = prev.map(p => p.id === project.id ? { ...project, updatedAt: new Date().toISOString() } : p);
+            saveToStorage(BANNER_PROJECTS_KEY, updated);
             return updated;
         });
     }, []);
 
-    const moveTask = useCallback((id: string, toColumn: TarefasColumn) => {
-        setTasks(prev => {
-            const task = prev.find(t => t.id === id);
-            if (!task || task.column === toColumn) return prev;
-            const targetTasks = prev.filter(t => t.column === toColumn);
-            const updated = prev.map(t =>
-                t.id === id ? { ...t, column: toColumn, order: targetTasks.length, updatedAt: new Date().toISOString() } : t
-            );
-            saveToStorage(Tarefas_KEY, updated);
+    const loadProject = useCallback((id: string): BannerProject | undefined => {
+        return projects.find(p => p.id === id);
+    }, [projects]);
+
+    const deleteProject = useCallback((id: string): void => {
+        setProjects(prev => {
+            const updated = prev.filter(p => p.id !== id);
+            saveToStorage(BANNER_PROJECTS_KEY, updated);
             return updated;
         });
     }, []);
 
-    const deleteTask = useCallback((id: string) => {
-        setTasks(prev => {
-            const updated = prev.filter(t => t.id !== id);
-            saveToStorage(Tarefas_KEY, updated);
-            return updated;
-        });
-    }, []);
-
-    return { tasks, addTask, updateTask, moveTask, deleteTask };
+    return { projects, saveProject, updateProject, loadProject, deleteProject };
 }
