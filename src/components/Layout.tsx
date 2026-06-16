@@ -5,11 +5,11 @@ import {
     ListItemText, Toolbar, Typography, InputBase, alpha, styled,
 } from '@mui/material';
 import {
-    Menu as MenuIcon, Build, NotificationsActive, ViewQuilt,
+    Menu as MenuIcon,
     Search as SearchIcon,
 } from '@mui/icons-material';
 
-const DRAWER_WIDTH = 260;
+const DRAWER_WIDTH = 300;
 
 const SearchBox = styled('div')(({ theme }) => ({
     position: 'relative', borderRadius: theme.shape.borderRadius,
@@ -28,14 +28,17 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     '& .MuiInputBase-input': { padding: theme.spacing(1, 1, 1, 0), paddingLeft: `calc(1em + ${theme.spacing(4)})` },
 }));
 
-const menuItems = [
-    // { text: 'Painel', icon: <Dashboard />, path: '/' },
-    { text: 'Ferramentas', icon: <Build />, path: '/ferramentas' },
-    { text: 'Lembretes', icon: <NotificationsActive />, path: '/lembretes' },
-    { text: 'Editor de Banner', icon: <ViewQuilt />, path: '/banner-editor' },
-];
+type ItemMenu = {
+    text: string;
+    icon: React.ReactNode;
+    path: string;
+}
 
-export default function Layout() {
+type props = {
+    menuItems: ItemMenu[]
+}
+
+export default function Layout({menuItems}:props) {
     const [drawerOpen, setDrawerOpen] = useState(true);
     const [search, setSearch] = useState('');
     const navigate = useNavigate();
@@ -60,14 +63,14 @@ export default function Layout() {
                 </Toolbar>
             </AppBar>
             <Drawer variant="temporary" open={drawerOpen} onClose={() => setDrawerOpen(false)}
-                sx={{ '& .MuiDrawer-paper': { width: DRAWER_WIDTH, boxSizing: 'border-box', mt: '64px' } }}
+                sx={{ '& .MuiDrawer-paper': { width: DRAWER_WIDTH, boxSizing: 'border-box', mt: '65px' } }}
                 ModalProps={{ keepMounted: true }}>
                 <List sx={{ pt: 2 }}>
                     {menuItems.map((item) => (
                         <ListItemButton key={item.path} selected={location.pathname === item.path}
                             onClick={() => { navigate(item.path); setDrawerOpen(false); }}
                             sx={{ mx: 1, borderRadius: 2, mb: 0.5, '&.Mui-selected': { bgcolor: 'rgba(108,99,255,0.15)', '&:hover': { bgcolor: 'rgba(108,99,255,0.25)' } } }}>
-                            <ListItemIcon sx={{ color: location.pathname === item.path ? 'primary.main' : 'text.secondary', minWidth: 40 }}>
+                            <ListItemIcon sx={{ color: location.pathname === item.path ? 'primary.main' : 'text.secondary', minWidth: 35 }}>
                                 {item.icon}
                             </ListItemIcon>
                             <ListItemText primary={item.text} />
@@ -75,7 +78,7 @@ export default function Layout() {
                     ))}
                 </List>
             </Drawer>
-            <Box component="main" sx={{ flexGrow: 1, p: 3, mt: '64px' }}>
+            <Box component="main" sx={{ flexGrow: 1, p: 3, mt: '65px' }}>
                 <Outlet context={{ search }} />
             </Box>
         </Box>
