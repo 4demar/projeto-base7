@@ -5,6 +5,8 @@ import Layout from './components/Layout';
 import RemindersPage from './pages/LembreteTodo';
 import Ferramentas from './pages/Ferramentas';
 import BannerEditor from './pages/BannerEditor';
+import CadastroTipoOcorrencia from './pages/CadastroTipoOcorrencia';
+import CadastroOcorrencia from './pages/CadastroOcorrencia';
 import { Build, NotificationsActive, ViewQuilt, Assignment } from '@mui/icons-material';
 
 const menuItems = [
@@ -26,6 +28,8 @@ export default function App() {
             <Route path="/ferramentas" element={<Ferramentas />} />
             <Route path="/lembretes" element={<RemindersPage />} />
             <Route path="/banner-editor" element={<BannerEditor />} />
+            <Route path="/cadastro-tipo" element={<CadastroTipoOcorrencia />} />
+            <Route path="/cadastro-ocorrencia" element={<CadastroOcorrencia />} />
           </Route>
         </Routes>
       </BrowserRouter>
