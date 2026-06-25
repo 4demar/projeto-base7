@@ -11,7 +11,7 @@ import {
 } from '@mui/icons-material';
 import { format, isPast, isToday, differenceInMinutes } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { useLembrete } from '../store/useStore';
+import { useLembrete } from '../hook/useStore';
 import { LembreteDto } from '../types';
 
 function getStatusColor(dueDate: string, completed: boolean) {

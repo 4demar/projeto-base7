@@ -16,7 +16,7 @@ import PropertiesPanel from '../components/BannerEditor/PropertiesPanel';
 import HtmlCodeDialog from '../components/BannerEditor/HtmlCodeDialog';
 import ProjectsListDialog from '../components/BannerEditor/ProjectsListDialog';
 import { generateHtml } from '../components/BannerEditor/generateHtml';
-import { useBannerEditor } from '../store/useStore';
+import { useBannerEditor } from '../hook/useStore';
 import type { BannerTextElement } from '../types';
 
 const VALID_MIME_TYPES = ['image/png', 'image/jpeg', 'image/webp'];

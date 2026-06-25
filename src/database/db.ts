@@ -1,5 +1,5 @@
-// Banco IndexedDB para o cadastro de Tipo de Ocorrência.
-// Implementação nativa (sem dependências externas).
+// Base de conexão IndexedDB para a configuração dinâmica de ocorrências.
+// Substitui o antigo "apiBoletim": o serviço grava/lê aqui como se fosse uma API.
 
 export const DB_NAME = 'devportal_ocorrencias';
 export const DB_VERSION = 1;
@@ -7,7 +7,6 @@ export const DB_VERSION = 1;
 export const Stores = {
     tipoOcorrencia: 'tipoOcorrencia',
     complementoOcorrencia: 'complementoOcorrencia',
-    tabFormulario: 'tabFormulario',
     campoFormulario: 'campoFormulario',
     regraCampoOcorrencia: 'regraCampoOcorrencia',
 } as const;
@@ -25,33 +24,29 @@ export function openDb(): Promise<IDBDatabase> {
         request.onupgradeneeded = () => {
             const db = request.result;
 
-            // tipoOcorrencia: id (PK autoincrement), nome, listaIdTabs[], inativo
+            // Tipo: PK numeroTipo (autoIncrement), guarda tabsConfiguracao inline.
             if (!db.objectStoreNames.contains(Stores.tipoOcorrencia)) {
-                db.createObjectStore(Stores.tipoOcorrencia, { keyPath: 'id', autoIncrement: true });
+                db.createObjectStore(Stores.tipoOcorrencia, { keyPath: 'numeroTipo', autoIncrement: true });
             }
 
-            // complementoOcorrencia: id (PK), idTipoOcorrencia (FK), nome, inativo
+            // Complemento (Subtipo): PK numeroComplemento (autoIncrement), índice por numeroTipo.
             if (!db.objectStoreNames.contains(Stores.complementoOcorrencia)) {
-                const store = db.createObjectStore(Stores.complementoOcorrencia, { keyPath: 'id', autoIncrement: true });
-                store.createIndex('idTipoOcorrencia', 'idTipoOcorrencia', { unique: false });
+                const store = db.createObjectStore(Stores.complementoOcorrencia, { keyPath: 'numeroComplemento', autoIncrement: true });
+                store.createIndex('numeroTipo', 'numeroTipo', { unique: false });
             }
 
-            // tabFormulario: id (PK), nome
-            if (!db.objectStoreNames.contains(Stores.tabFormulario)) {
-                db.createObjectStore(Stores.tabFormulario, { keyPath: 'id', autoIncrement: true });
-            }
-
-            // campoFormulario: id (PK), idTab (FK), nome, label
+            // Catálogo de campos (seed): PK id, índice por idTab.
             if (!db.objectStoreNames.contains(Stores.campoFormulario)) {
-                const store = db.createObjectStore(Stores.campoFormulario, { keyPath: 'id', autoIncrement: true });
+                const store = db.createObjectStore(Stores.campoFormulario, { keyPath: 'id' });
                 store.createIndex('idTab', 'idTab', { unique: false });
             }
 
-            // regraCampoOcorrencia: id (PK), idCampoFormulario (FK), idComplementoOcorrencia (FK), editavel, obrigatorio
+            // Regra de campo (UTLBO07): PK id (autoIncrement), índices por complemento/tipo.
             if (!db.objectStoreNames.contains(Stores.regraCampoOcorrencia)) {
                 const store = db.createObjectStore(Stores.regraCampoOcorrencia, { keyPath: 'id', autoIncrement: true });
-                store.createIndex('idCampoFormulario', 'idCampoFormulario', { unique: false });
                 store.createIndex('idComplementoOcorrencia', 'idComplementoOcorrencia', { unique: false });
+                store.createIndex('idTipoOcorrencia', 'idTipoOcorrencia', { unique: false });
+                store.createIndex('idCampoFormulario', 'idCampoFormulario', { unique: false });
             }
         };
 

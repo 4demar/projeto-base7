@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/*
+  Variáveis de cor globais do projeto.
+  Usadas pelos componentes styled-components (ex.: painel de Configuração).
+  O atributo data-theme é definido em <html> pelo ColorModeContext.
+*/
+:root,
+:root[data-theme='light'] {
+  --cor-primaria: #6C63FF;
+  --cor-primaria-clara: #8b85ff;
+  --cor-azul-acento: #6C63FF;
+  --cor-fundo: #F5F7FA;
+  --cor-superficie: #FFFFFF;
+  --cor-borda: #D0D7DE;
+  --cor-borda-forte: #b9c2cd;
+  --cor-texto: #1F2328;
+  --cor-texto-suave: #57606A;
+  --cor-sucesso: #1A7F37;
+  --cor-sucesso-fundo: #dcfce7;
+  --cor-neutro: #8b949e;
+  --cor-neutro-fundo: #EFF1F4;
+  --cor-perigo: #CF222E;
+  --cor-perigo-fundo: #fee2e2;
+  --cor-linha-hover: #F5F7FA;
+
+  --scrollbar-track: #e6eaf0;
+  --scrollbar-thumb: #c2cbd6;
+  --scrollbar-thumb-hover: #a7b2c0;
+}
+
+:root[data-theme='dark'] {
+  --cor-primaria: #6C63FF;
+  --cor-primaria-clara: #8b85ff;
+  --cor-azul-acento: #8b85ff;
+  --cor-fundo: #0D1117;
+  --cor-superficie: #161B22;
+  --cor-borda: #30363D;
+  --cor-borda-forte: #444c56;
+  --cor-texto: #E6EDF3;
+  --cor-texto-suave: #8B949E;
+  --cor-sucesso: #3fb950;
+  --cor-sucesso-fundo: #133a1c;
+  --cor-neutro: #6e7681;
+  --cor-neutro-fundo: #21262D;
+  --cor-perigo: #f85149;
+  --cor-perigo-fundo: #3d1513;
+  --cor-linha-hover: #1c2128;
+
+  --scrollbar-track: #0D1117;
+  --scrollbar-thumb: #30363D;
+  --scrollbar-thumb-hover: #484F58;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}

@@ -1,0 +1,8 @@
+export enum TelasOcorrencia {
+    DADOS_OCORRENCIA = 0,
+    DETALHES_OCORRENCIA = 1,
+    PRODUTOS_OCORRENCIA = 2,
+    INFORMACOES_VEICULOS = 3,
+    ENVOLVIDOS = 4,
+    ANEXOS = 5,
+}

@@ -7,14 +7,17 @@ import {
 import {
     Menu as MenuIcon,
     Search as SearchIcon,
+    DarkMode as DarkModeIcon,
+    LightMode as LightModeIcon,
 } from '@mui/icons-material';
+import { useColorMode } from '../contexts/ColorModeContext';
 
 const DRAWER_WIDTH = 300;
 
 const SearchBox = styled('div')(({ theme }) => ({
     position: 'relative', borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.white, 0.08),
-    '&:hover': { backgroundColor: alpha(theme.palette.common.white, 0.12) },
+    backgroundColor: alpha(theme.palette.text.primary, theme.palette.mode === 'dark' ? 0.08 : 0.06),
+    '&:hover': { backgroundColor: alpha(theme.palette.text.primary, theme.palette.mode === 'dark' ? 0.12 : 0.1) },
     marginLeft: theme.spacing(2), width: 300,
 }));
 
@@ -43,10 +46,11 @@ export default function Layout({menuItems}:props) {
     const [search, setSearch] = useState('');
     const navigate = useNavigate();
     const location = useLocation();
+    const { mode, toggleColorMode } = useColorMode();
 
     return (
         <Box sx={{ display: 'flex', minHeight: '100vh' }}>
-            <AppBar position="fixed" sx={{ zIndex: (t) => t.zIndex.drawer + 1, bgcolor: 'background.paper', borderBottom: '1px solid #30363D', boxShadow: 'none' }}>
+            <AppBar position="fixed" sx={{ zIndex: (t) => t.zIndex.drawer + 1 }}>
                 <Toolbar>
                     <IconButton color="inherit" onClick={() => setDrawerOpen(!drawerOpen)} edge="start" sx={{ mr: 2 }}>
                         <MenuIcon />
@@ -60,6 +64,14 @@ export default function Layout({menuItems}:props) {
                             inputProps={{ 'aria-label': 'buscar' }} />
                     </SearchBox>
                     <Box sx={{ flexGrow: 1 }} />
+                    <IconButton
+                        color="inherit"
+                        onClick={toggleColorMode}
+                        aria-label={mode === 'dark' ? 'Ativar tema claro' : 'Ativar tema escuro'}
+                        title={mode === 'dark' ? 'Tema claro' : 'Tema escuro'}
+                    >
+                        {mode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}
+                    </IconButton>
                 </Toolbar>
             </AppBar>
             <Drawer variant="temporary" open={drawerOpen} onClose={() => setDrawerOpen(false)}
