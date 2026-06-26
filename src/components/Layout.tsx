@@ -55,7 +55,7 @@ export default function Layout({menuItems}:props) {
                     <IconButton color="inherit" onClick={() => setDrawerOpen(!drawerOpen)} edge="start" sx={{ mr: 2 }}>
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6" noWrap sx={{ background: 'linear-gradient(90deg, #6C63FF, #00BFA6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                    <Typography variant="h5" noWrap sx={{ background: 'linear-gradient(90deg, #6C63FF, #00BFA6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                         PortalDev
                     </Typography>
                     <SearchBox>
@@ -75,13 +75,13 @@ export default function Layout({menuItems}:props) {
                 </Toolbar>
             </AppBar>
             <Drawer variant="temporary" open={drawerOpen} onClose={() => setDrawerOpen(false)}
-                sx={{ '& .MuiDrawer-paper': { width: DRAWER_WIDTH, boxSizing: 'border-box', mt: '65px' } }}
+                sx={{ '& .MuiDrawer-paper': { width: DRAWER_WIDTH, boxSizing: 'border-box', mt: '55px' } }}
                 ModalProps={{ keepMounted: true }}>
                 <List sx={{ pt: 2 }}>
                     {menuItems.map((item) => (
                         <ListItemButton key={item.path} selected={location.pathname === item.path}
                             onClick={() => { navigate(item.path); setDrawerOpen(false); }}
-                            sx={{ mx: 1, borderRadius: 2, mb: 0.5, '&.Mui-selected': { bgcolor: 'rgba(108,99,255,0.15)', '&:hover': { bgcolor: 'rgba(108,99,255,0.25)' } } }}>
+                            sx={{ padding: 1.2, mx: 1, borderRadius: 1, mb: 0.5, '&.Mui-selected': { bgcolor: 'rgba(108,99,255,0.15)', '&:hover': { bgcolor: 'rgba(108,99,255,0.25)' } } }}>
                             <ListItemIcon sx={{ color: location.pathname === item.path ? 'primary.main' : 'text.secondary', minWidth: 35 }}>
                                 {item.icon}
                             </ListItemIcon>

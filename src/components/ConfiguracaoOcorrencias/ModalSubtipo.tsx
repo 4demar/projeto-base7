@@ -376,17 +376,18 @@ export default function ModalSubtipo({ aberto, tipos, subtipoEdicao, onFechar, o
                                                 ) : (
                                                     <ConfigScroll>
                                                         <ConfigCabecalho>
-                                                            <div className="col-campo">Campo</div>
+                                                            <div className="col-campo align-items-center">Campo</div>
 
-                                                            <div className="grupo-titulo grupo-cadastro">Tela de Cadastro</div>
-                                                            <div className="grupo-titulo grupo-editar">Tela de Edição</div>
-                                                            <div className="grupo-titulo grupo-obrigatorio">Obrigatório</div>
-                                                            <div className="grupo-titulo grupo-visualizar">Visualizar</div>
+                                                            <div className="grupo-titulo grupo-cadastro">Nova ocorrência</div>
+                                                            <div className="grupo-titulo grupo-editar">Editar ocorrência</div>
+                                                            <div className="grupo-titulo grupo-obrigatorio">Campo obrigatório</div>
+                                                            <div className="grupo-titulo grupo-visualizar">Ocorrência finalizada</div>
 
-                                                            <div className="sub">Exibir</div>
-                                                            <div className="sub">Cadastrar</div>
-                                                            <div className="sub">Exibir</div>
-                                                            <div className="sub">Editar</div>
+
+                                                            <div className="sub">Somente Leitura</div>
+                                                            <div className="sub">Editável</div>
+                                                            <div className="sub">Somente Leitura</div>
+                                                            <div className="sub">Editável</div>
 
                                                         </ConfigCabecalho>
 
@@ -397,9 +398,18 @@ export default function ModalSubtipo({ aberto, tipos, subtipoEdicao, onFechar, o
                                                                     <div className="nome-campo">{campo.label}</div>
 
                                                                     <div className="celula">
-                                                                        <ConfigCheck type="checkbox" aria-label="Cadastro - Visualizar"
-                                                                            checked={cfg.cadastroVisivel}
+                                                                       
+                                                                        <ConfigCheck type="checkbox"
+                                                                            value=""
+                                                                            checked={undefined}
                                                                             onChange={(e) => alterarFlag(campo.id, "cadastroVisivel", e.target.checked)} />
+
+                                                                        {/* <div className="form-check">
+                                                                            <ConfigCheck className="form-check-input" type="checkbox" value="" id="checkIndeterminate">
+                                                                            <label className="form-check-label" for="checkIndeterminate">
+                                                                                Indeterminate checkbox
+                                                                            </label>
+                                                                        </div> */}
                                                                     </div>
                                                                     <div className="celula">
                                                                         <ConfigCheck type="checkbox" aria-label="Cadastro - Cadastrar"

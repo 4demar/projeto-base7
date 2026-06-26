@@ -14,22 +14,10 @@ export const ModalOverlay = styled.div`
     top: 50px;
 `;
 
-export const ModalCaixa = styled.div<{ largura?: number }>`
-    background: ${cores.superficie};
-    border-radius: 18px;
-    width: 100%;
-    max-width: ${({ largura }) => largura ?? 880}px;
-    max-height: 85vh;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 24px 60px rgba(16, 24, 40, 0.25);
-    overflow: hidden;
-`;
-
 export const ModalCabecalho = styled.div`
     padding: 22px 26px 14px;
-    border-bottom: 1px solid ${cores.borda};
-    background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+    border-bottom: 1px solid ${cores.neutro};
+    background: ${cores.neutroFundo}; //linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
 
     .titulo {
         display: flex;
@@ -74,6 +62,18 @@ export const ModalCabecalho = styled.div`
     position: relative;
 `;
 
+export const ModalCaixa = styled.div<{ largura?: number }>`
+    background: ${cores.fundo};
+    border-radius: 18px;
+    width: 100%;
+    max-width: ${({ largura }) => largura ?? 880}px;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 24px 60px rgba(16, 24, 40, 0.25);
+    overflow: hidden;
+`;
+
 export const ModalCorpo = styled.div`
     padding: 22px 26px;
     overflow-y: auto;
@@ -82,11 +82,11 @@ export const ModalCorpo = styled.div`
 
 export const ModalRodape = styled.div`
     padding: 16px 26px;
-    border-top: 1px solid ${cores.borda};
+    border-top: 1px solid ${cores.neutro};
     display: flex;
     justify-content: flex-end;
     gap: 10px;
-    background: #fafbfd;
+    background: ${cores.neutroFundo};
 `;
 
 export const DuasColunas = styled.div`
@@ -568,8 +568,7 @@ export const ConfigLinha = styled.div`
 `;
 
 export const ConfigCheck = styled.input`
-    width: 18px;
-    height: 18px;
+
     cursor: pointer;
     accent-color: ${cores.azulAcento};
 
@@ -593,8 +592,9 @@ export const TabsCabecalho = styled.div`
     display: grid;
     grid-template-columns: ${GRADE_TABS};
     min-width: 520px;
-    background: #f8fafc;
+    background:  ${cores.neutroFundo};;
     border-bottom: 1px solid ${cores.borda};
+    align-items: center;
 
     .col {
         padding: 10px 6px;

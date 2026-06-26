@@ -227,10 +227,10 @@ export default function ModalTipo({ aberto, tipoEdicao, onFechar, onSalvo }: Pro
                             <TabsScroll>
                                 <TabsCabecalho>
                                     <div className="col" />
-                                    <div className="col col-aba">Aba</div>
-                                    <div className="col col-fluxo">Visualizar</div>
-                                    <div className="col col-fluxo">Editar</div>
-                                    <div className="col col-fluxo">Cadastrar</div>
+                                    <div className="col d-flex justify-content-start">Exibição de abas</div>
+                                    <div className="col col-fluxo">Nova Ocorrência</div>
+                                    <div className="col col-fluxo">Editar Ocorrência</div>
+                                    <div className="col col-fluxo">Ocorrência Finalizada</div>
                                 </TabsCabecalho>
 
                                 {abasOrdenadas.map((aba, index) => {
@@ -251,19 +251,19 @@ export default function ModalTipo({ aberto, tipoEdicao, onFechar, onSalvo }: Pro
                                             </span>
                                             <span className="nome-aba">{aba.descricao}</span>
                                             <div className="celula">
-                                                <ConfigCheck type="checkbox" aria-label={`${aba.descricao} - Visualizar`}
-                                                    checked={cfg.visualizar}
-                                                    onChange={(e) => alterarFluxo(aba.id, "visualizar", e.target.checked)} />
+                                                <ConfigCheck type="checkbox"
+                                                    checked={cfg.cadastrar}
+                                                    onChange={(e) => alterarFluxo(aba.id, "cadastrar", e.target.checked)} />
                                             </div>
                                             <div className="celula">
-                                                <ConfigCheck type="checkbox" aria-label={`${aba.descricao} - Editar`}
+                                                <ConfigCheck type="checkbox"
                                                     checked={cfg.editar}
                                                     onChange={(e) => alterarFluxo(aba.id, "editar", e.target.checked)} />
                                             </div>
                                             <div className="celula">
-                                                <ConfigCheck type="checkbox" aria-label={`${aba.descricao} - Cadastrar`}
-                                                    checked={cfg.cadastrar}
-                                                    onChange={(e) => alterarFluxo(aba.id, "cadastrar", e.target.checked)} />
+                                                <ConfigCheck type="checkbox"
+                                                    checked={cfg.visualizar}
+                                                    onChange={(e) => alterarFluxo(aba.id, "visualizar", e.target.checked)} />
                                             </div>
                                         </TabsLinha>
                                     );
