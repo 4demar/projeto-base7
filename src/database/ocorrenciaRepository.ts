@@ -25,12 +25,10 @@ export interface ComplementoRecord {
 
 // Catálogo (seed) de campos por aba (idTab). Ids fixos, conforme o projeto de origem.
 const listaCamposBase: CampoTabFormulario[] = [
-    { id: 1, idTab: 0, nome: 'codigoFilial', label: 'Filial' },
-    { id: 2, idTab: 0, nome: 'auxilioCentral', label: 'Com auxílio da central de monitoramento' },
-    { id: 3, idTab: 0, nome: 'statusOcorrencia', label: 'Status da ocorrência' },
-    { id: 4, idTab: 0, nome: 'numeroBoletimOcorrencia', label: 'Número B.O da polícia' },
-    { id: 5, idTab: 0, nome: 'dataOcorrencia', label: 'Data da ocorrência' },
-    { id: 6, idTab: 0, nome: 'dataCadastro', label: 'Data de cadastro' },
+    { id: 1, idTab: 0, nome: 'auxilioCentral', label: 'Com auxílio da central de monitoramento' },
+    { id: 2, idTab: 0, nome: 'statusOcorrencia', label: 'Status da ocorrência' },
+    { id: 3, idTab: 0, nome: 'numeroBoletimOcorrencia', label: 'Número B.O da polícia' },
+    
     { id: 7, idTab: 1, nome: 'tituloOcorrencia', label: 'Título da ocorrência' },
     { id: 8, idTab: 1, nome: 'descricaoOcorrencia', label: 'Descrição da ocorrência' },
     { id: 9, idTab: 1, nome: 'providenciasTomadas', label: 'Providências tomadas' },

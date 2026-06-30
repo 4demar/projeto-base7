@@ -6,11 +6,13 @@ import Ferramentas from "./pages/Ferramentas";
 import BannerEditor from "./pages/BannerEditor";
 import CadastroTipoOcorrencia from "./pages/CadastroTipoOcorrencia";
 import CadastroOcorrencia from "./pages/CadastroOcorrencia";
+import OcorrenciasPage from "./pages/Ocorrencias";
 import {
   Build,
   NotificationsActive,
   ViewQuilt,
   Assignment,
+  List as ListIcon,
 } from "@mui/icons-material";
 import { RegrasFormularioProvider } from "./contexts/RegrasFormularioContext";
 import { LoadingProvider } from "./contexts/LoadingContext";
@@ -20,8 +22,8 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const menuItems = [
-  // { text: 'Painel', icon: <Dashboard />, path: '/' },
-  { text: "Nova Ocorrência", icon: <Assignment />, path: "/cadastro-ocorrencia"},
+  { text: "Ocorrências", icon: <ListIcon />, path: "/ocorrencias" },
+  { text: "Nova Ocorrência", icon: <Assignment />, path: "/cadastro-ocorrencia" },
   { text: "Configuração de Ocorrências", icon: <Build />, path: "/cadastro-tipo" },
   { text: "Ferramentas", icon: <Build />, path: "/ferramentas" },
   { text: "Lembretes", icon: <NotificationsActive />, path: "/lembretes" },
@@ -47,11 +49,12 @@ function AppContent() {
               <BrowserRouter>
                 <Routes>
                   <Route path="/" element={<Layout menuItems={menuItems} />}>
+                    <Route path="/ocorrencias" element={<OcorrenciasPage />} />
+                    <Route path="/cadastro-ocorrencia" element={<CadastroOcorrencia />} />
+                    <Route path="/cadastro-tipo" element={<CadastroTipoOcorrencia />} />
                     <Route path="/ferramentas" element={<Ferramentas />} />
                     <Route path="/lembretes" element={<RemindersPage />} />
                     <Route path="/banner-editor" element={<BannerEditor />} />
-                    <Route path="/cadastro-tipo" element={<CadastroTipoOcorrencia />} />
-                    <Route path="/cadastro-ocorrencia" element={<CadastroOcorrencia />} />
                   </Route>
                 </Routes>
               </BrowserRouter>
