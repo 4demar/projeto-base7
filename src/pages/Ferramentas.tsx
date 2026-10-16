@@ -9,7 +9,7 @@ import {
     JsonFormatter,
     JsonCsvConverter,
     XmlJsonConverter,
-    MongoSqlValuesConverter,
+    EpcSqlValuesConverter,
     Base64Tool,
     UrlEncodeTool,
     JwtDecoder,
@@ -45,7 +45,7 @@ const CATEGORIAS: Categoria[] = [
             { label: 'Formatador JSON', component: JsonFormatter },
             { label: 'JSON ⇄ CSV', component: JsonCsvConverter },
             { label: 'XML ⇄ JSON', component: XmlJsonConverter },
-            { label: 'Mongo JSON → SQL VALUES', component: MongoSqlValuesConverter },
+            { label: 'EPC(JSON/CSV) → SQL VALUES', component: EpcSqlValuesConverter },
         ],
     },
     {
