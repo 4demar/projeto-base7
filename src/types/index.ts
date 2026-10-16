@@ -82,3 +82,25 @@ export interface RegraCampoOcorrencia {
     campoObrigatorio: boolean;
     visualizacaoVisivel: boolean;
 }
+
+
+// ===== Usuário (CRUD via API) =====
+
+export type PerfilUsuario = 'Administrador' | 'Gerente' | 'Operador' | 'Consulta';
+
+// Representação do usuário retornada pela Web API (.NET).
+export interface UsuarioApi {
+    codigo: number;
+    nome: string;
+    email: string;
+    perfil: PerfilUsuario;
+    ativo: boolean;
+}
+
+// Dados enviados para criação/atualização (sem o código, gerado pela API).
+export interface UsuarioPayload {
+    nome: string;
+    email: string;
+    perfil: PerfilUsuario;
+    ativo: boolean;
+}
