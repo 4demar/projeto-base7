@@ -7,6 +7,7 @@ export { default as UnitConverter } from './UnitConverter';
 export { default as JsonFormatter } from './JsonFormatter';
 export { default as JsonCsvConverter } from './JsonCsvConverter';
 export { default as XmlJsonConverter } from './XmlJsonConverter';
+export { default as MongoSqlValuesConverter } from './MongoSqlValuesConverter';
 export { default as Base64Tool } from './Base64Tool';
 export { default as UrlEncodeTool } from './UrlEncodeTool';
 export { default as JwtDecoder } from './JwtDecoder';
