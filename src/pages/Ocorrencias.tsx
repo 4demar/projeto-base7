@@ -4,18 +4,18 @@ import {
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
 } from '@mui/material';
 import { Add, Visibility, Edit } from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
 import { TipoOcorrencia } from '../types';
 import { ConfiguracaoOcorrenciaService } from '../services/configuracaoOcorrencia';
 import { useFormBoletimCadastro, FormActions } from '../contexts/FormCadastroContext';
 import ModalEditarOcorrencia from '../components/Ocorrencias/modalEditar';
+import ModalCadastroOcorrencia from '../components/Ocorrencias/modalCadastro';
 import { OcorrenciaSalva, carregarOcorrencias } from '../components/Ocorrencias/storage';
 
 export default function OcorrenciasPage() {
-    const navigate = useNavigate();
     const { dispatch } = useFormBoletimCadastro();
     const [tipos, setTipos] = useState<TipoOcorrencia[]>([]);
     const [ocorrencias, setOcorrencias] = useState<OcorrenciaSalva[]>(carregarOcorrencias);
+    const [modalCadastroAberto, setModalCadastroAberto] = useState(false);
     const [modalAberto, setModalAberto] = useState(false);
     const [ocorrenciaModal, setOcorrenciaModal] = useState<OcorrenciaSalva | null>(null);
 
@@ -32,7 +32,8 @@ export default function OcorrenciasPage() {
 
     const iniciarCadastro = () => {
         dispatch({ type: FormActions.resetFormulario });
-        navigate('/cadastro-ocorrencia');
+        dispatch({ type: FormActions.setShowModal, payload: false });
+        setModalCadastroAberto(true);
     };
 
     const abrirModal = (oc: OcorrenciaSalva) => {
@@ -113,6 +114,13 @@ export default function OcorrenciasPage() {
                 aberto={modalAberto}
                 onFechar={fecharModal}
                 tipo={tipoModal}
+            />
+
+            <ModalCadastroOcorrencia
+                aberto={modalCadastroAberto}
+                onFechar={() => setModalCadastroAberto(false)}
+                onSalvo={() => setOcorrencias(carregarOcorrencias())}
+                tipos={tipos}
             />
         </Box>
     );
