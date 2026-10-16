@@ -1,5 +1,6 @@
-import { useState, useCallback } from 'react';
-import { LembreteDto, BannerProject } from '../types';
+import { useState, useCallback, useEffect } from 'react';
+import { LembreteDto, BannerProject, UsuarioApi, UsuarioPayload } from '../types';
+import { UsuarioService } from '../services/usuarioApi';
 
 const LEMBRETE_KEY = 'devportal_lembrete';
 
@@ -101,4 +102,61 @@ export function useBannerEditor(): {
     }, []);
 
     return { projects, saveProject, updateProject, loadProject, deleteProject };
+}
+
+
+export function useUsuario() {
+    const [usuarios, setUsuarios] = useState<UsuarioApi[]>([]);
+    const [carregando, setCarregando] = useState(false);
+
+    const carregarUsuarios = useCallback(async () => {
+        setCarregando(true);
+        try {
+            const lista = await UsuarioService.listarUsuarios();
+            setUsuarios(lista);
+        } finally {
+            setCarregando(false);
+        }
+    }, []);
+
+    useEffect(() => {
+        carregarUsuarios();
+    }, [carregarUsuarios]);
+
+    const addUsuario = useCallback(async (usuario: UsuarioPayload) => {
+        const criado = await UsuarioService.criarUsuario(usuario);
+        setUsuarios(prev => [criado, ...prev]);
+        return criado;
+    }, []);
+
+    const updateUsuario = useCallback(async (usuario: UsuarioApi) => {
+        const payload: UsuarioPayload = {
+            nome: usuario.nome,
+            email: usuario.email,
+            perfil: usuario.perfil,
+            ativo: usuario.ativo,
+        };
+        await UsuarioService.atualizarUsuario(usuario.codigo, payload);
+        setUsuarios(prev => prev.map(u => u.codigo === usuario.codigo ? usuario : u));
+    }, []);
+
+    const toggleUsuarioAtivo = useCallback(async (codigo: number) => {
+        const alvo = usuarios.find(u => u.codigo === codigo);
+        if (!alvo) return;
+        const payload: UsuarioPayload = {
+            nome: alvo.nome,
+            email: alvo.email,
+            perfil: alvo.perfil,
+            ativo: !alvo.ativo,
+        };
+        await UsuarioService.atualizarUsuario(codigo, payload);
+        setUsuarios(prev => prev.map(u => u.codigo === codigo ? { ...alvo, ativo: !alvo.ativo } : u));
+    }, [usuarios]);
+
+    const deleteUsuario = useCallback(async (codigo: number) => {
+        await UsuarioService.removerUsuario(codigo);
+        setUsuarios(prev => prev.filter(u => u.codigo !== codigo));
+    }, []);
+
+    return { usuarios, carregando, carregarUsuarios, addUsuario, updateUsuario, toggleUsuarioAtivo, deleteUsuario };
 }

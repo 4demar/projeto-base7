@@ -6,11 +6,15 @@ import Ferramentas from "./pages/Ferramentas";
 import BannerEditor from "./pages/BannerEditor";
 import CadastroTipoOcorrencia from "./pages/CadastroTipoOcorrencia";
 import CadastroOcorrencia from "./pages/CadastroOcorrencia";
+import OcorrenciasPage from "./pages/Ocorrencias";
+import CadastroUsuario from "./pages/CadastroUsuario";
 import {
   Build,
   NotificationsActive,
   ViewQuilt,
   Assignment,
+  List as ListIcon,
+  People,
 } from "@mui/icons-material";
 import { RegrasFormularioProvider } from "./contexts/RegrasFormularioContext";
 import { LoadingProvider } from "./contexts/LoadingContext";
@@ -20,9 +24,10 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const menuItems = [
-  // { text: 'Painel', icon: <Dashboard />, path: '/' },
-  { text: "Nova Ocorrência", icon: <Assignment />, path: "/cadastro-ocorrencia"},
+  { text: "Ocorrências", icon: <ListIcon />, path: "/ocorrencias" },
+  { text: "Nova Ocorrência", icon: <Assignment />, path: "/cadastro-ocorrencia" },
   { text: "Configuração de Ocorrências", icon: <Build />, path: "/cadastro-tipo" },
+  { text: "Usuários", icon: <People />, path: "/usuarios" },
   { text: "Ferramentas", icon: <Build />, path: "/ferramentas" },
   { text: "Lembretes", icon: <NotificationsActive />, path: "/lembretes" },
   { text: "Editor de Banner", icon: <ViewQuilt />, path: "/banner-editor" },
@@ -47,11 +52,13 @@ function AppContent() {
               <BrowserRouter>
                 <Routes>
                   <Route path="/" element={<Layout menuItems={menuItems} />}>
+                    <Route path="/ocorrencias" element={<OcorrenciasPage />} />
+                    <Route path="/cadastro-ocorrencia" element={<CadastroOcorrencia />} />
+                    <Route path="/cadastro-tipo" element={<CadastroTipoOcorrencia />} />
+                    <Route path="/usuarios" element={<CadastroUsuario />} />
                     <Route path="/ferramentas" element={<Ferramentas />} />
                     <Route path="/lembretes" element={<RemindersPage />} />
                     <Route path="/banner-editor" element={<BannerEditor />} />
-                    <Route path="/cadastro-tipo" element={<CadastroTipoOcorrencia />} />
-                    <Route path="/cadastro-ocorrencia" element={<CadastroOcorrencia />} />
                   </Route>
                 </Routes>
               </BrowserRouter>
