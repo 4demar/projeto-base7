@@ -1,6 +1,7 @@
 import { useState, type ComponentType, type MouseEvent } from 'react';
-import { Box, Typography, Tabs, Tab, Menu, MenuItem, ListItemText, Breadcrumbs } from '@mui/material';
-import { ArrowDropDown, Check } from '@mui/icons-material';
+import { Box, Typography, Tabs, Tab, Menu, MenuItem, ListItemText, Breadcrumbs, Stack, Button } from '@mui/material';
+import { ArrowDropDown, Check, EditNote } from '@mui/icons-material';
+import { toast } from 'react-toastify';
 import {
     NumberConverter,
     TimestampConverter,
@@ -80,13 +81,32 @@ export default function Ferramentas() {
         fecharMenu();
     };
 
+    // Chama o endpoint local do dev server (vite.config.ts) que inicia o notepad.exe
+    const [abrindoNotepad, setAbrindoNotepad] = useState(false);
+    const abrirNotepad = async () => {
+        setAbrindoNotepad(true);
+        try {
+            const resp = await fetch('/local/abrir-notepad', { method: 'POST' });
+            if (!resp.ok) throw new Error(await resp.text());
+        } catch (err) {
+            toast.error(`Não foi possível abrir o Notepad${err instanceof Error && err.message ? `: ${err.message}` : '.'}`);
+        } finally {
+            setAbrindoNotepad(false);
+        }
+    };
+
     const categoriaAtual = CATEGORIAS[selecionado.categoria];
     const ferramentaAtual = categoriaAtual.items[selecionado.item];
     const Componente = ferramentaAtual.component;
 
     return (
         <Box>
-            <Typography variant="h5" gutterBottom>Portal de Ferramentas</Typography>
+            <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1 }}>
+                <Typography variant="h5">Portal de Ferramentas</Typography>
+                <Button variant="outlined" startIcon={<EditNote />} onClick={abrirNotepad} disabled={abrindoNotepad}>
+                    Abrir Notepad
+                </Button>
+            </Stack>
 
             <Tabs value={selecionado.categoria} sx={{ mb: 1, '& .MuiTab-root': { textTransform: 'none' } }}>
                 {CATEGORIAS.map((cat, i) => (
