@@ -26,6 +26,8 @@ interface Props {
     onSalvar?: () => void;
 }
 
+const ID_TAB_DADOS = 0;
+
 const nomeTab = (idTab: number) =>
     listaNavegacaoBase.find(t => t.id === idTab)?.descricao ?? `Aba ${idTab}`;
 
@@ -58,8 +60,10 @@ export default function TabsOcorrencia({ tipo, tipos = [], modoCadastro = false,
     const subtipoSelecionado = idComplemento !== 0;
 
     // Tabs permitidas para o fluxo atual, na ordem configurada pelo tipo.
+    // A aba 0 (Dados) é sempre a primeira: é nela que ficam Tipo e Subtipo, então não
+    // pode sumir nem mudar de posição quando o tipo selecionado não a configura.
     const tabsVisiveis = useMemo(() => {
-        if (!tipo?.tabsConfiguracao) return [0]; // Ao menos a aba 0 (Dados)
+        if (!tipo?.tabsConfiguracao) return [ID_TAB_DADOS];
         const filtradas = [...tipo.tabsConfiguracao]
             .filter(tab => {
                 switch (fluxoAtual) {
@@ -70,8 +74,9 @@ export default function TabsOcorrencia({ tipo, tipos = [], modoCadastro = false,
                 }
             })
             .sort((a, b) => a.ordem - b.ordem)
-            .map(tab => tab.idTab);
-        return filtradas.length > 0 ? filtradas : [0];
+            .map(tab => tab.idTab)
+            .filter(idTab => idTab !== ID_TAB_DADOS);
+        return [ID_TAB_DADOS, ...filtradas];
     }, [tipo, fluxoAtual]);
 
     // Carrega regras e campos quando subtipo muda.

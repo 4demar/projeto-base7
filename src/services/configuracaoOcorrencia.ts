@@ -87,7 +87,9 @@ export async function buscarTiposParaFluxo(): Promise<TipoOcorrencia[]> {
     try {
         await ensureSeed();
         const registros = await tipoOcorrenciaRepo.getAll();
-        const ativos = registros.filter(r => r.tipoInativo === 0);
+        // Ignora registros sem chave válida (resíduo do schema antigo): sem numeroTipo o
+        // Select do cadastro não consegue manter o valor selecionado.
+        const ativos = registros.filter(r => r.tipoInativo === 0 && typeof r.numeroTipo === 'number');
         return Promise.all(ativos.map(async r => {
             const complementos = await complementoOcorrenciaRepo.getByTipo(r.numeroTipo);
             return tipoDeRecord(r, complementos.map(complementoDeRecord));
