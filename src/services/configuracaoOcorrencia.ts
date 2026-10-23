@@ -100,6 +100,25 @@ export async function buscarTiposParaFluxo(): Promise<TipoOcorrencia[]> {
     }
 }
 
+/**
+ * Todos os tipos (inclusive inativos) com todos os complementos. Usado para exibir
+ * ocorrências já gravadas, cujo Tipo/Subtipo pode ter sido inativado depois.
+ */
+export async function buscarTiposParaExibicao(): Promise<TipoOcorrencia[]> {
+    try {
+        await ensureSeed();
+        const registros = await tipoOcorrenciaRepo.getAll();
+        const validos = registros.filter(r => typeof r.numeroTipo === 'number');
+        return Promise.all(validos.map(async r => {
+            const complementos = await complementoOcorrenciaRepo.getByTipo(r.numeroTipo);
+            return tipoDeRecord(r, complementos.map(complementoDeRecord));
+        }));
+    } catch (err) {
+        toast.error('Não foi possível buscar os tipos de ocorrência.');
+        throw err;
+    }
+}
+
 export async function inserirTipo(payload: TipoPayload): Promise<number> {
     try {
         return await tipoOcorrenciaRepo.create({
@@ -116,6 +135,8 @@ export async function inserirTipo(payload: TipoPayload): Promise<number> {
 
 export async function atualizarTipo(payload: TipoPayload): Promise<void> {
     try {
+        // put() com chave 0/indefinida criaria um registro novo com chave inválida.
+        if (!(payload.NumeroTipo > 0)) throw new Error('NumeroTipo inválido para atualização.');
         await tipoOcorrenciaRepo.update({
             numeroTipo: payload.NumeroTipo,
             nomeTipo: payload.Nome,
@@ -157,6 +178,7 @@ export async function inserirSubtipo(payload: SubtipoPayload): Promise<number> {
 
 export async function atualizarSubtipo(payload: SubtipoPayload): Promise<void> {
     try {
+        if (!(payload.NumeroComplemento > 0)) throw new Error('NumeroComplemento inválido para atualização.');
         await complementoOcorrenciaRepo.update({
             numeroComplemento: payload.NumeroComplemento,
             numeroTipo: payload.NumeroTipo,
@@ -267,6 +289,7 @@ export const ConfiguracaoOcorrenciaService = {
     listarTipos,
     listarTodosTipos,
     buscarTiposParaFluxo,
+    buscarTiposParaExibicao,
     inserirTipo,
     atualizarTipo,
     listarSubtipos,

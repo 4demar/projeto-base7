@@ -191,13 +191,16 @@ export default function ConfiguracaoOcorrencias() {
                 aberto={modalSubtipo}
                 tipos={tipos}
                 subtipoEdicao={subtipoEdicao}
+                tipoInicial={tipoSubtipos}
                 onFechar={() => setModalSubtipo(false)}
-                onSalvo={() => {
+                onSalvo={(numeroTipoSalvo) => {
                     setModalSubtipo(false);
                     // Regras do subtipo podem ter mudado: invalida o cache usado pelo
                     // fluxo de cadastro/edição para forçar recarga na próxima seleção.
                     if (subtipoEdicao) invalidarComplemento(subtipoEdicao.numeroTipo, subtipoEdicao.numeroComplemento);
-                    if (tipoSubtipos !== '') carregarSubtipos(tipoSubtipos);
+                    // Exibe o tipo do subtipo salvo, mesmo que a listagem estivesse em outro
+                    // tipo (ou sem tipo selecionado).
+                    carregarSubtipos(numeroTipoSalvo);
                 }}
             />
         </Painel>

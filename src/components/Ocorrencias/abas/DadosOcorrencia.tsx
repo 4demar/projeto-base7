@@ -6,6 +6,9 @@ import { ComplementoOcorrencia, TipoOcorrencia } from '../../../types';
 interface Props {
     tipos: TipoOcorrencia[];
     modoCadastro?: boolean;
+    // Nomes gravados na ocorrência, usados quando o Tipo/Subtipo não existe mais no catálogo.
+    nomeTipoSalvo?: string;
+    nomeSubtipoSalvo?: string;
 }
 
 /**
@@ -13,7 +16,7 @@ interface Props {
  * Campos fixos: Tipo, Subtipo, Filial, Data, Status, B.O da polícia, Auxílio central.
  * Tipo e Subtipo sempre visíveis (não controlados por regra).
  */
-export default function DadosOcorrencia({ tipos, modoCadastro = false }: Props) {
+export default function DadosOcorrencia({ tipos, modoCadastro = false, nomeTipoSalvo = '', nomeSubtipoSalvo = '' }: Props) {
     const { state, dispatch } = useFormBoletimCadastro();
     const { campoEhVisivel, campoEhSomenteLeitura, campoEhObrigatorio } = useFormularioOcorrencia();
 
@@ -21,6 +24,12 @@ export default function DadosOcorrencia({ tipos, modoCadastro = false }: Props) 
     const idComplemento = state.complementoOcorrencia;
     const tipoObj = tipos.find(t => t.numeroTipo === idTipo) ?? null;
     const subtipos: ComplementoOcorrencia[] = (tipoObj?.complementoOcorrencia ?? []).filter(c => c.complementoInativo === 0);
+
+    // Fora do cadastro, Tipo/Subtipo não mudam: exibe o nome atual do catálogo (inclusive
+    // inativos) ou, se não existir mais, o nome gravado na ocorrência.
+    const nomeTipo = tipoObj?.nomeTipo ?? nomeTipoSalvo;
+    const nomeSubtipo = tipoObj?.complementoOcorrencia
+        ?.find(c => c.numeroComplemento === idComplemento)?.nomeComplemento ?? nomeSubtipoSalvo;
 
     const setValor = (nome: string, valor: string) => {
         dispatch({ type: FormActions.setCampo, payload: { nome, valor } });
@@ -47,6 +56,12 @@ export default function DadosOcorrencia({ tipos, modoCadastro = false }: Props) 
             <Typography variant="subtitle1" fontWeight={600}>Dados da ocorrência</Typography>
 
             {/* Tipo e Subtipo — sempre visíveis, não controlados por regra */}
+            {!modoCadastro ? (
+                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                    <TextField label="Tipo" value={nomeTipo} fullWidth slotProps={{ input: { readOnly: true } }} />
+                    <TextField label="Subtipo" value={nomeSubtipo} fullWidth slotProps={{ input: { readOnly: true } }} />
+                </Stack>
+            ) : (
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
                 <FormControl fullWidth disabled={!modoCadastro}>
                     <InputLabel>Tipo</InputLabel>
@@ -73,6 +88,7 @@ export default function DadosOcorrencia({ tipos, modoCadastro = false }: Props) 
                     </Select>
                 </FormControl>
             </Stack>
+            )}
 
             {/* Filial — campo fixo (não configurável por regra) */}
             <TextField

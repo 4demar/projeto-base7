@@ -24,6 +24,16 @@ interface Props {
     tipos?: TipoOcorrencia[];
     modoCadastro?: boolean;
     onSalvar?: () => void;
+    // Nomes gravados na ocorrência (fallback de exibição na aba Dados).
+    nomeTipoSalvo?: string;
+    nomeSubtipoSalvo?: string;
+}
+
+interface OpcoesAba {
+    tipos: TipoOcorrencia[];
+    modoCadastro: boolean;
+    nomeTipoSalvo?: string;
+    nomeSubtipoSalvo?: string;
 }
 
 const ID_TAB_DADOS = 0;
@@ -32,9 +42,16 @@ const nomeTab = (idTab: number) =>
     listaNavegacaoBase.find(t => t.id === idTab)?.descricao ?? `Aba ${idTab}`;
 
 /** Renderiza o componente da aba pelo id */
-function renderizarAba(idTab: number, tipos: TipoOcorrencia[], modoCadastro: boolean) {
+function renderizarAba(idTab: number, opcoes: OpcoesAba) {
     switch (idTab) {
-        case 0: return <DadosOcorrencia tipos={tipos} modoCadastro={modoCadastro} />;
+        case 0: return (
+            <DadosOcorrencia
+                tipos={opcoes.tipos}
+                modoCadastro={opcoes.modoCadastro}
+                nomeTipoSalvo={opcoes.nomeTipoSalvo}
+                nomeSubtipoSalvo={opcoes.nomeSubtipoSalvo}
+            />
+        );
         case 1: return <DetalhesOcorrencia />;
         case 2: return <ProdutosOcorrencia />;
         case 3: return <VeiculosOcorrencia />;
@@ -48,7 +65,9 @@ function renderizarAba(idTab: number, tipos: TipoOcorrencia[], modoCadastro: boo
     }
 }
 
-export default function TabsOcorrencia({ tipo, tipos = [], modoCadastro = false, onSalvar }: Props) {
+export default function TabsOcorrencia({
+    tipo, tipos = [], modoCadastro = false, onSalvar, nomeTipoSalvo, nomeSubtipoSalvo,
+}: Props) {
     const { state } = useFormBoletimCadastro();
     const { carregarRegras, carregarCamposTab, limparRegras } = useRegrasFormulario();
     const { fluxoAtual } = useFormularioOcorrencia();
@@ -124,7 +143,7 @@ export default function TabsOcorrencia({ tipo, tipos = [], modoCadastro = false,
                 {carregando ? (
                     <Box sx={{ textAlign: 'center', py: 3 }}><CircularProgress size={24} /></Box>
                 ) : (
-                    renderizarAba(idTabAtual, tipos, modoCadastro)
+                    renderizarAba(idTabAtual, { tipos, modoCadastro, nomeTipoSalvo, nomeSubtipoSalvo })
                 )}
             </Box>
 
@@ -138,7 +157,10 @@ export default function TabsOcorrencia({ tipo, tipos = [], modoCadastro = false,
                     Voltar
                 </Button>
 
-                {ehUltima && subtipoSelecionado ? (
+                {ehUltima && fluxoAtual === FluxoOcorrencia.Visualizacao ? (
+                    // Visualização é somente leitura: não há o que salvar.
+                    <span />
+                ) : ehUltima && subtipoSelecionado ? (
                     <Button
                         variant="contained"
                         startIcon={<Save />}

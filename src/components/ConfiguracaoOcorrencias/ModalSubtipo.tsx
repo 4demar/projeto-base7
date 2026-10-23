@@ -28,8 +28,11 @@ type Props = {
     aberto: boolean;
     tipos: TipoOcorrencia[];
     subtipoEdicao: SubtipoEdicao | null;
+    // Tipo pré-selecionado ao criar (o tipo filtrado na listagem, se houver).
+    tipoInicial?: number | "";
     onFechar: () => void;
-    onSalvo: () => void;
+    // Recebe o tipo do subtipo salvo, para a listagem exibir esse tipo.
+    onSalvo: (numeroTipo: number) => void;
 };
 
 // Configuração de um campo nos 3 fluxos. A existência de qualquer flag verdadeira
@@ -62,7 +65,7 @@ const possuiRegra = (c: ConfigCampo): boolean =>
     c.edicaoVisivel || c.edicaoEditavel ||
     c.visualizacaoVisivel || c.campoObrigatorio;
 
-export default function ModalSubtipo({ aberto, tipos, subtipoEdicao, onFechar, onSalvo }: Props) {
+export default function ModalSubtipo({ aberto, tipos, subtipoEdicao, tipoInicial = "", onFechar, onSalvo }: Props) {
     const { setLoading } = useLoading();
     const editando = subtipoEdicao !== null;
 
@@ -123,7 +126,7 @@ export default function ModalSubtipo({ aberto, tipos, subtipoEdicao, onFechar, o
             setDescricao(subtipoEdicao.descricaoComplemento ?? "");
             setAtivo(subtipoEdicao.complementoInativo === 0);
         } else {
-            setNumeroTipo("");
+            setNumeroTipo(tipoInicial);
             setNome("");
             setDescricao("");
             setAtivo(true);
@@ -131,6 +134,8 @@ export default function ModalSubtipo({ aberto, tipos, subtipoEdicao, onFechar, o
             setCamposPorTab({});
         }
         setBusca("");
+        // tipoInicial só é lido na abertura; mudanças com o modal aberto não devem resetar o form.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [aberto, subtipoEdicao]);
 
     // Quando o tipo muda, recarrega campos e (em edição) as regras já existentes.
@@ -270,7 +275,7 @@ export default function ModalSubtipo({ aberto, tipos, subtipoEdicao, onFechar, o
 
             await sincronizarRegras(numeroTipo as number, idComplemento);
             toast.success(editando ? "Subtipo atualizado com sucesso" : "Subtipo criado com sucesso");
-            onSalvo();
+            onSalvo(numeroTipo as number);
         } catch {
             // serviço já exibe toast
         } finally {
@@ -398,18 +403,9 @@ export default function ModalSubtipo({ aberto, tipos, subtipoEdicao, onFechar, o
                                                                     <div className="nome-campo">{campo.label}</div>
 
                                                                     <div className="celula">
-                                                                       
-                                                                        <ConfigCheck type="checkbox"
-                                                                            value=""
-                                                                            checked={undefined}
+                                                                        <ConfigCheck type="checkbox" aria-label="Cadastro - Visualizar"
+                                                                            checked={cfg.cadastroVisivel}
                                                                             onChange={(e) => alterarFlag(campo.id, "cadastroVisivel", e.target.checked)} />
-
-                                                                        {/* <div className="form-check">
-                                                                            <ConfigCheck className="form-check-input" type="checkbox" value="" id="checkIndeterminate">
-                                                                            <label className="form-check-label" for="checkIndeterminate">
-                                                                                Indeterminate checkbox
-                                                                            </label>
-                                                                        </div> */}
                                                                     </div>
                                                                     <div className="celula">
                                                                         <ConfigCheck type="checkbox" aria-label="Cadastro - Cadastrar"

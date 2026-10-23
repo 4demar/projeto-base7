@@ -50,7 +50,43 @@ const listaCamposBase: CampoTabFormulario[] = [
     { id: 25, idTab: 9, nome: 'ocorrenciasRelacionada', label: 'Ocorrências relacionada' },
 ];
 
-// Garante o seed do catálogo de campos no IndexedDB (executa uma única vez).
+// A chave 0 é usada pelas telas como "nada selecionado". Registros gravados com chave 0
+// (resíduo da migração do schema antigo) ficam impossíveis de selecionar, então recebem
+// uma nova chave gerada pelo autoIncrement e os vínculos são atualizados.
+async function repararChavesZero(): Promise<void> {
+    const tipoZero = await getByKey<TipoRecord>(Stores.tipoOcorrencia, 0);
+    if (tipoZero) {
+        const dados: Partial<TipoRecord> = { ...tipoZero };
+        delete dados.numeroTipo;
+        const novoTipo = await add(Stores.tipoOcorrencia, dados);
+
+        const complementos = await getAllByIndex<ComplementoRecord>(Stores.complementoOcorrencia, 'numeroTipo', 0);
+        for (const c of complementos) {
+            await put<ComplementoRecord>(Stores.complementoOcorrencia, { ...c, numeroTipo: novoTipo });
+        }
+        const regras = await getAllByIndex<RegraCampoOcorrencia>(Stores.regraCampoOcorrencia, 'idTipoOcorrencia', 0);
+        for (const r of regras) {
+            await put<RegraCampoOcorrencia>(Stores.regraCampoOcorrencia, { ...r, idTipoOcorrencia: novoTipo });
+        }
+        await remove(Stores.tipoOcorrencia, 0);
+    }
+
+    const complementoZero = await getByKey<ComplementoRecord>(Stores.complementoOcorrencia, 0);
+    if (complementoZero) {
+        const dados: Partial<ComplementoRecord> = { ...complementoZero };
+        delete dados.numeroComplemento;
+        const novoComplemento = await add(Stores.complementoOcorrencia, dados);
+
+        const regras = await getAllByIndex<RegraCampoOcorrencia>(Stores.regraCampoOcorrencia, 'idComplementoOcorrencia', 0);
+        for (const r of regras) {
+            await put<RegraCampoOcorrencia>(Stores.regraCampoOcorrencia, { ...r, idComplementoOcorrencia: novoComplemento });
+        }
+        await remove(Stores.complementoOcorrencia, 0);
+    }
+}
+
+// Garante o seed do catálogo de campos no IndexedDB e repara chaves inválidas
+// (executa uma única vez por carregamento da página).
 let seedPromise: Promise<void> | null = null;
 export function ensureSeed(): Promise<void> {
     if (!seedPromise) {
@@ -61,7 +97,10 @@ export function ensureSeed(): Promise<void> {
                     await put<CampoTabFormulario>(Stores.campoFormulario, campo);
                 }
             }
+            await repararChavesZero();
         })();
+        // Permite nova tentativa se algo falhar (ex.: banco bloqueado).
+        seedPromise.catch(() => { seedPromise = null; });
     }
     return seedPromise;
 }

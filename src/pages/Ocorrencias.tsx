@@ -7,13 +7,17 @@ import { Add, Visibility, Edit } from '@mui/icons-material';
 import { TipoOcorrencia } from '../types';
 import { ConfiguracaoOcorrenciaService } from '../services/configuracaoOcorrencia';
 import { useFormBoletimCadastro, FormActions } from '../contexts/FormCadastroContext';
+import { useControleBoletimOcorrencia } from '../contexts/ControleBoletimContext';
 import ModalEditarOcorrencia from '../components/Ocorrencias/modalEditar';
 import ModalCadastroOcorrencia from '../components/Ocorrencias/modalCadastro';
 import { OcorrenciaSalva, carregarOcorrencias } from '../components/Ocorrencias/storage';
 
 export default function OcorrenciasPage() {
     const { dispatch } = useFormBoletimCadastro();
+    const { setSomenteVisualizacao } = useControleBoletimOcorrencia();
+    // Tipos ativos para o cadastro; catálogo completo para exibir ocorrências já gravadas.
     const [tipos, setTipos] = useState<TipoOcorrencia[]>([]);
+    const [tiposExibicao, setTiposExibicao] = useState<TipoOcorrencia[]>([]);
     const [ocorrencias, setOcorrencias] = useState<OcorrenciaSalva[]>(carregarOcorrencias);
     const [modalCadastroAberto, setModalCadastroAberto] = useState(false);
     const [modalAberto, setModalAberto] = useState(false);
@@ -23,21 +27,27 @@ export default function OcorrenciasPage() {
         ConfiguracaoOcorrenciaService.buscarTiposParaFluxo()
             .then(dados => setTipos(dados ?? []))
             .catch(() => setTipos([]));
+        ConfiguracaoOcorrenciaService.buscarTiposParaExibicao()
+            .then(dados => setTiposExibicao(dados ?? []))
+            .catch(() => setTiposExibicao([]));
     }, []);
 
     const tipoModal = useMemo(
-        () => tipos.find(t => t.numeroTipo === ocorrenciaModal?.numeroTipo) ?? null,
-        [tipos, ocorrenciaModal]
+        () => tiposExibicao.find(t => t.numeroTipo === ocorrenciaModal?.numeroTipo) ?? null,
+        [tiposExibicao, ocorrenciaModal]
     );
 
     const iniciarCadastro = () => {
         dispatch({ type: FormActions.resetFormulario });
         dispatch({ type: FormActions.setShowModal, payload: false });
+        setSomenteVisualizacao(false);
         setModalCadastroAberto(true);
     };
 
     const abrirModal = (oc: OcorrenciaSalva) => {
         dispatch({ type: FormActions.resetFormulario });
+        // Ocorrência finalizada (ícone do olho) abre somente leitura; rascunho abre em edição.
+        setSomenteVisualizacao(oc.status === 'finalizada');
         dispatch({ type: FormActions.setTipoOcorrencia, payload: oc.numeroTipo });
         dispatch({ type: FormActions.setComplementoOcorrencia, payload: oc.numeroComplemento });
         dispatch({ type: FormActions.setShowModal, payload: true });
@@ -114,6 +124,8 @@ export default function OcorrenciasPage() {
                 aberto={modalAberto}
                 onFechar={fecharModal}
                 tipo={tipoModal}
+                tipos={tiposExibicao}
+                ocorrencia={ocorrenciaModal}
             />
 
             <ModalCadastroOcorrencia
